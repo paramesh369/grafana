@@ -1,0 +1,45 @@
+---
+- hosts: all
+  tasks:
+    - name: update the system
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: upgrade the system packages
+      apt: state=latest force_apt_get=yes
+
+    - name: Download node exporter binary from official repo
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+        dest: /root
+        mode: '0755'
+
+    - name: Extract the node exporter zip file
+      unarchive:
+        src: /root/node_exporter-1.5.0.linux-amd64.tar.gz
+        dest: /root
+        remote_src: yes
+
+    - name: create node exporter service file
+      copy:
+        dest: /etc/systemd/system/node_exporter.service
+        content: |
+          [Unit]
+          Description=Node Exporter
+          Documentation=https://prometheus.io/docs/introduction/overview/
+          After=network-online.target
+
+          [Service]
+          User=root
+          Restart=on-failure
+
+          ExecStart=/root/node_exporter-1.5.0.linux-amd64/node_exporter
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: start and enable node exporter
+      systemd:
+        name: node_exporter
+        state: started
+        daemon_reload: yes
+        enabled: yes
