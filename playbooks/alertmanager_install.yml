@@ -1,0 +1,42 @@
+---
+- hosts: all
+  tasks:
+    - name: update the system
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: upgrade the system packages
+      apt: state=latest force_apt_get=yes
+
+    - name: Download the alertmanager binary from official repo
+      get_url:
+        url: https://github.com/prometheus/alertmanager/releases/download/v0.26.0/alertmanager-0.26.0.linux-amd64.tar.gz
+        dest: /root
+        mode: '0755'
+
+    - name: Extract the alertmanager zip file
+      unarchive:
+        src: /root/alertmanager-0.26.0.linux-amd64.tar.gz
+        dest: /root
+        remote_src: yes
+
+    - name: create alertmanager service file
+      copy:
+        dest: /etc/systemd/system/alertmanager.service
+        content: |
+          [Unit]
+          Description=AlertManager Server Service
+          Wants=network-online.target
+          After=network-online.target
+
+          [Service]
+          User=root
+          Group=root
+          Type=simple
+          ExecStart=/root/alertmanager-0.26.0.linux-amd64/alertmanager --config.file /root/alertmanager-0.26.0.linux-amd64/alertmanager.yml
+
+    - name: start and enable the alertmanager service
+      systemd:
+        name: alertmanager
+        state: started
+        daemon_reload: yes
+        enabled: yes
