@@ -10,3 +10,12 @@
 # we can pass the variables while executing the playbook on runtime
 
 # ansible-playbook -e "PERSON=Paramesh" -e "WISHES=Morning" <playbook-name> 
+
+# variables preference while executing
+# 1. CMD line
+# 2. TASK level
+# 3. From-File
+# 4. From-Prompt
+# 5. PLAY level
+# 6. From-inventory
+# 7. roles
