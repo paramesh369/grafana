@@ -1,0 +1,9 @@
+- name: Variables from files
+  hosts: all
+  become: true
+  vars_files:
+    variables.yml
+  tasks:
+    - name: checking variables from files
+      ansible.builtin.debug:
+        msg: "Hi, Iam learning {{Course}}, Trainer is {{Trainer}}, Duration is {{Duration}}"
