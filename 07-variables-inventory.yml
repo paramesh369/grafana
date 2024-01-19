@@ -1,0 +1,17 @@
+- name: Variables from Inventory level
+  hosts: localhost
+  become: true
+  tasks:
+    - name: check variables
+      ansible.builtin.package:
+        msg: "Hi, Iam learning {{Course}}, Trainer is {{Trainer}}, Duration is {{Duration}}"
+
+# Meanwhile in the inventory, we need to add the variables like this:
+
+# [localhost]
+# localhost
+
+# [localhost:vars]
+# Course: "DevOps with AWS"
+# Trainer: "paramesh"
+# Duration: "110HRS"
