@@ -1,0 +1,14 @@
+# TASK level Variables
+- name: variables from task level
+  hosts: all
+  become: true
+  vars:
+    Course: "DevOps"
+    Trainer: "Paramesh"
+    Duration: "110HRS"
+  tasks:
+    - name: Checking Variables
+      vars:                           # Task level varibales can overwrite the PLAY level variables
+        Course: "DevOps with AWS"
+      ansible.builtin.debug:
+        msg: "Hi, Iam learning {{Course}}, Trainer is {{Trainer}}, Duration is {{Duration}}"
