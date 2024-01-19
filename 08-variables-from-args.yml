@@ -1,0 +1,12 @@
+- name: variables from Args
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: check variables
+      ansible.builtin.debug:
+        msg: "Hello {{PERSON}}, Good {{WISHES}}"
+
+# we can pass the variables while executing the playbook on runtime
+
+# ansible-playbook -e "PERSON=Paramesh" -e "WISHES=Morning" <playbook-name> 
