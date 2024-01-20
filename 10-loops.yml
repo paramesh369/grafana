@@ -1,0 +1,13 @@
+- name:loops
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: print persons
+      ansible.builtin.debug:
+        msg: "Hello {{item}}" # item is a default keyword
+      loop:
+        - Ramesh
+        - Suresh
+        - Robert
+        - Paramesh
