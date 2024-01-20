@@ -1,0 +1,22 @@
+- name: conditions
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: check paramesh user exists or not
+      ansible.builtin.command: id paramesh
+      register: user 
+      ignore_errors: true # ansible will not exit even it got error
+
+    - name: print variable value
+      ansible.builtin.debug:
+        msg: "User output is: {{user}}"
+
+    - name: print exit status or return code 
+      ansible.builtin.debug:
+        msg: "status is: {{user.rc}}"
+      
+    - name: create the user 
+      ansible.builtin.user:
+        name: paramesh
+      when: user.rc != 0 
