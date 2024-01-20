@@ -1,0 +1,13 @@
+- name: install packages through loops
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: install multiple packages
+      ansible.builtin.package:
+        name: "{{item}}"
+        state: present
+      loop:
+        - git
+        - mysql
+        - java
